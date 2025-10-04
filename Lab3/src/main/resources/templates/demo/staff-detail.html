@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết Staff - Lab3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .staff-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .staff-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ddd;
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        .staff-name {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .staff-email {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        .salary-value {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .level-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .level-0 { background: #f39c12; }
+        .level-1 { background: #27ae60; }
+        .level-2 { background: #8e44ad; }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #666;
+            border: 1px solid #bdc3c7;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        @media (max-width: 480px) {
+            .actions {
+                flex-direction: column;
+            }
+
+            .info-item {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a th:href="@{/staff/list}" class="back-link">← Quay lại danh sách</a>
+
+        <div class="staff-card">
+            <img th:src="@{|/photos/${staff.photo}|}" alt="Avatar" class="staff-avatar">
+            <h1 class="staff-name" th:text="${#strings.capitalizeWords(staff.fullname)}"></h1>
+            <p class="staff-email" th:text="${staff.id}"></p>
+
+            <ul class="info-list">
+                <li class="info-item">
+                    <span class="info-label">Giới tính:</span>
+                    <span class="info-value" th:text="${staff.gender ? 'Nam' : 'Nữ'}"></span>
+                </li>
+                <li class="info-item">
+                    <span class="info-label">Ngày sinh:</span>
+                    <span class="info-value" th:text="${#dates.format(staff.birthday, 'dd-MM-yyyy')}"></span>
+                </li>
+                <li class="info-item">
+                    <span class="info-label">Lương:</span>
+                    <span class="info-value salary-value">
+                        $<span th:text="${#numbers.formatDecimal(staff.salary, 0, 'COMMA', 2, 'POINT')}"></span>
+                    </span>
+                </li>
+                <li class="info-item">
+                    <span class="info-label">Cấp bậc:</span>
+                    <span class="info-value">
+                        <th:block th:switch="${staff.level}">
+                            <span th:case="0" class="level-badge level-0">Úy</span>
+                            <span th:case="1" class="level-badge level-1">Tá</span>
+                            <span th:case="2" class="level-badge level-2">Tướng</span>
+                            <span th:case="*">Chưa có</span>
+                        </th:block>
+                    </span>
+                </li>
+            </ul>
+
+            <div class="actions">
+                <a th:href="@{/staff/list}" class="btn btn-primary">Danh sách Staff</a>
+                <a th:href="@{/}" class="btn btn-secondary">Trang chủ</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

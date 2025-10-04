@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhóm theo cấp bậc - Lab3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-nav {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .back-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .back-nav a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .page-subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .groups-container {
+            display: grid;
+            gap: 30px;
+        }
+
+        .group-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+        }
+
+        .group-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+
+        .level-0::before {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #d97706);
+        }
+
+        .level-1::before {
+            background: linear-gradient(90deg, #10b981, #059669, #047857);
+        }
+
+        .level-2::before {
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed, #6d28d9);
+        }
+
+        .group-header {
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .level-0 .group-header {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+
+        .level-1 .group-header {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        }
+
+        .level-2 .group-header {
+            background: linear-gradient(135deg, #e9d5ff 0%, #ddd6fe 100%);
+        }
+
+        .level-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .level-0 .level-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+        }
+
+        .level-1 .level-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .level-2 .level-badge {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .group-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .group-count {
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .member-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .member-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: #cbd5e1;
+        }
+
+        .member-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        .member-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 12px;
+            text-transform: capitalize;
+        }
+
+        .member-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .salary-value {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            color: #9ca3af;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .page-footer {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin: 0 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e0;
+            color: #4a5568;
+        }
+
+        @media (max-width: 768px) {
+            .members-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .group-header {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .btn {
+                margin: 8px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-nav">
+            <a th:href="@{/}">
+                <i class="fas fa-arrow-left"></i>
+                Trang chủ
+            </a>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title">Nhóm theo cấp bậc</h1>
+            <p class="page-subtitle">Phân loại nhân viên theo cấp bậc quân đội</p>
+        </div>
+
+        <div class="groups-container">
+            <div th:each="entry : ${grouped}" class="group-card" th:class="'level-' + ${entry.key}">
+                <div class="group-header">
+                    <div class="level-badge">
+                        <th:block th:switch="${entry.key}">
+                            <span th:case="0">
+                                <i class="fas fa-medal"></i>
+                                Cấp Úy
+                            </span>
+                            <span th:case="1">
+                                <i class="fas fa-award"></i>
+                                Cấp Tá
+                            </span>
+                            <span th:case="2">
+                                <i class="fas fa-crown"></i>
+                                Cấp Tướng
+                            </span>
+                        </th:block>
+                    </div>
+                    <h2 class="group-title" th:text="${levels[entry.key]}"></h2>
+                    <p class="group-count">
+                        <i class="fas fa-users"></i>
+                        <span th:text="${#lists.size(entry.value)}"></span> nhân viên
+                    </p>
+                </div>
+
+                <div th:if="${entry.value != null and !entry.value.isEmpty()}" class="members-grid">
+                    <div th:each="staff : ${entry.value}" class="member-card">
+                        <img th:src="@{|/photos/${staff.photo}|}" alt="Avatar" class="member-avatar">
+                        <div class="member-name" th:text="${#strings.capitalizeWords(staff.fullname)}"></div>
+                        <div class="member-info">
+                            <div class="info-row">
+                                <i class="fas fa-envelope"></i>
+                                <span class="info-value" th:text="${staff.id}"></span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span class="info-value salary-value" th:text="${#numbers.formatDecimal(staff.salary, 0, 'COMMA', 2, 'POINT')}"></span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fas fa-venus-mars"></i>
+                                <span class="info-value" th:text="${staff.gender ? 'Nam' : 'Nữ'}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${entry.value == null or entry.value.isEmpty()}" class="empty-state">
+                    <i class="fas fa-user-slash"></i>
+                    <p>Chưa có nhân viên nào ở cấp bậc này</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <a th:href="@{/staff/list}" class="btn btn-primary">
+                <i class="fas fa-list"></i>
+                Danh sách Staff
+            </a>
+            <a th:href="@{/staff/new}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i>
+                Thêm Staff mới
+            </a>
+        </div>
+    </div>
+</body>
+</html>
