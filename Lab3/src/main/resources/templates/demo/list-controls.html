@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controls Demo - Lab3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-nav {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .back-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .back-nav a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .controls-container {
+            display: grid;
+            gap: 30px;
+        }
+
+        .control-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .control-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card-header h3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .custom-select {
+            position: relative;
+        }
+
+        .custom-select select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            font-size: 1rem;
+            background: #fafbfc;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 20px;
+            padding-right: 50px;
+        }
+
+        .custom-select select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .custom-select select:hover {
+            border-color: #cbd5e1;
+        }
+
+        .radio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .radio-option {
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            background: #fafbfc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .radio-label:hover {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+        }
+
+        .radio-option input[type="radio"]:checked+ .radio-label {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+            color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .radio-dot {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option input[type="radio"]:checked+ .radio-label .radio-dot {
+            border-color: #667eea;
+            background: #667eea;
+        }
+
+        .radio-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .radio-option input[type="radio"]:checked+ .radio-label .radio-dot::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .radio-text {
+            flex: 1;
+            text-transform: capitalize;
+        }
+
+        .card-footer {
+            padding: 30px 40px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin: 0 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e0;
+            color: #4a5568;
+        }
+
+        @media (max-width: 768px) {
+            .radio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-body {
+                padding: 30px 20px;
+            }
+
+            .card-footer {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="back-nav">
+            <a th:href="@{/}">
+                <i class="fas fa-arrow-left"></i>
+                Trang chủ
+            </a>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title">Form Controls</h1>
+            <p class="page-subtitle">Minh họa SelectBox và Radio Button Group với Thymeleaf</p>
+        </div>
+
+        <div class="controls-container">
+            <!-- SelectBox Card -->
+            <div class="control-card">
+                <div class="card-header">
+                    <h3>
+                        <i class="fas fa-list-ul"></i>
+                        SelectBox Demo
+                    </h3>
+                    <p>Đổ danh sách Staff vào dropdown select</p>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-user-check"></i>
+                            Chọn nhân viên
+                        </label>
+                        <div class="custom-select">
+                            <select name="cbo">
+                                <option value="">-- Chọn nhân viên --</option>
+                                <th:block th:each="staff: ${list}">
+                                    <option th:value="${staff.id}" th:text="${#strings.capitalizeWords(staff.fullname)}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Radio Group Card -->
+            <div class="control-card">
+                <div class="card-header">
+                    <h3>
+                        <i class="fas fa-dot-circle"></i>
+                        Radio Button Group
+                    </h3>
+                    <p>Tạo nhóm radio buttons từ danh sách Staff</p>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-users"></i>
+                            Chọn một nhân viên
+                        </label>
+                        <div class="radio-grid">
+                            <th:block th:each="staff: ${list}">
+                                <div class="radio-option">
+                                    <input type="radio" name="rdo" th:value="${staff.id}" th:id="'radio-' + ${staff.id}">
+                                    <label th:for="'radio-' + ${staff.id}" class="radio-label">
+                                        <div class="radio-dot"></div>
+                                        <span class="radio-text" th:text="${#strings.capitalizeWords(staff.fullname)}"></span>
+                                    </label>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-card" style="margin-top: 30px;">
+            <div class="card-footer">
+                <div>
+                    <a th:href="@{/staff/list}" class="btn btn-primary">
+                        <i class="fas fa-list"></i>
+                        Danh sách Staff
+                    </a>
+                    <a th:href="@{/}" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Trang chủ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

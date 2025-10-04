@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lab3 - Thymeleaf Demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: white;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover {
+            background: #34495e;
+            color: white;
+            border-color: #34495e;
+        }
+
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .exercise-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s;
+        }
+
+        .exercise-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .exercise-number {
+            background: #34495e;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .exercise-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .exercise-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .exercise-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #666;
+            border: 1px solid #bdc3c7;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .exercises-grid { grid-template-columns: 1fr; }
+            .exercise-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>LAB 3 - THYMELEAF</h1>
+        <p>Biểu thức • Chỉ thị • Định dạng dữ liệu • Hiển thị danh sách</p>
+    </div>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <a href="#bai1" class="nav-tab">Bài 1</a>
+            <a href="#bai2" class="nav-tab">Bài 2</a>
+            <a href="#bai3" class="nav-tab">Bài 3</a>
+            <a href="#bai4" class="nav-tab">Bài 4</a>
+            <a href="#bai5" class="nav-tab">Bài 5</a>
+            <a href="#bai6" class="nav-tab">Bài 6</a>
+        </div>
+
+        <div class="exercises-grid">
+            <!-- Bài 1 -->
+            <div class="exercise-card" id="bai1">
+                <div class="exercise-number">Bài 1</div>
+                <h3 class="exercise-title">Chi tiết Staff</h3>
+                <p class="exercise-description">
+                    Hiển thị thông tin chi tiết nhân viên: họ tên (capitalize),
+                    giới tính, ngày sinh (dd-MM-yyyy), cấp bậc và lương định dạng.
+                </p>
+                <div class="exercise-actions">
+                    <a class="btn btn-primary" th:href="@{/staff/detail}" target="_blank">Xem Demo</a>
+                    <a class="btn btn-secondary" href="#bai1">Chi tiết</a>
+                </div>
+            </div>
+
+            <!-- Bài 2 -->
+            <div class="exercise-card" id="bai2">
+                <div class="exercise-number">Bài 2</div>
+                <h3 class="exercise-title">Danh sách Staff</h3>
+                <p class="exercise-description">
+                    Liệt kê danh sách nhân viên với số thứ tự, họ tên và lương.
+                    Sử dụng th:each và trạng thái phần tử.
+                </p>
+                <div class="exercise-actions">
+                    <a class="btn btn-primary" th:href="@{/staff/list}" target="_blank">Xem Demo</a>
+                    <a class="btn btn-secondary" href="#bai2">Chi tiết</a>
+                </div>
+            </div>
+
+            <!-- Bài 3 -->
+            <div class="exercise-card" id="bai3">
+                <div class="exercise-number">Bài 3</div>
+                <h3 class="exercise-title">Nhóm theo cấp bậc</h3>
+                <p class="exercise-description">
+                    Phân nhóm nhân viên theo cấp bậc (Úy, Tá, Tướng)
+                    và hiển thị từng nhóm riêng biệt.
+                </p>
+                <div class="exercise-actions">
+                    <a class="btn btn-primary" th:href="@{/staff/group}" target="_blank">Xem Demo</a>
+                    <a class="btn btn-secondary" href="#bai3">Chi tiết</a>
+                </div>
+            </div>
+
+            <!-- Bài 4 -->
+            <div class="exercise-card" id="bai4">
+                <div class="exercise-number">Bài 4</div>
+                <h3 class="exercise-title">Trạng thái phần tử</h3>
+                <p class="exercise-description">
+                    Bảng hiển thị index, count, first, last, odd, even
+                    của từng phần tử trong vòng lặp.
+                </p>
+                <div class="exercise-actions">
+                    <a class="btn btn-primary" th:href="@{/staff/list-status}" target="_blank">Xem Demo</a>
+                    <a class="btn btn-secondary" href="#bai4">Chi tiết</a>
+                </div>
+            </div>
+
+            <!-- Bài 5 -->
+            <div class="exercise-card" id="bai5">
+                <div class="exercise-number">Bài 5</div>
+                <h3 class="exercise-title">Select & Radio Controls</h3>
+                <p class="exercise-description">
+                    Đổ dữ liệu từ danh sách vào SelectBox và
+                    tạo nhóm Radio Button tự động.
+                </p>
+                <div class="exercise-actions">
+                    <a class="btn btn-primary" th:href="@{/staff/list-controls}" target="_blank">Xem Demo</a>
+                    <a class="btn btn-secondary" href="#bai5">Chi tiết</a>
+                </div>
+            </div>
+
+            <!-- Bài 6 -->
+            <div class="exercise-card" id="bai6">
+                <div class="exercise-number">Bài 6</div>
+                <h3 class="exercise-title">Thêm mới Staff</h3>
+                <p class="exercise-description">
+                    Form nhập liệu tạo nhân viên mới với binding
+                    dữ liệu và validation cơ bản.
+                </p>
+                <div class="exercise-actions">
+                    <a class="btn btn-primary" th:href="@{/staff/new}" target="_blank">Mở Form</a>
+                    <a class="btn btn-secondary" href="#bai6">Chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Lab 3 Thymeleaf - Lập trình Java 5</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm mới Staff - Lab3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .radio-item input[type="radio"] {
+            margin: 0;
+        }
+
+        .radio-item label {
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #666;
+            border: 1px solid #bdc3c7;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a th:href="@{/}" class="back-link">← Trang chủ</a>
+
+        <div class="form-card">
+            <h2 class="form-title">Thêm mới Staff</h2>
+
+            <form th:action="@{/staff/save}" th:object="${staff}" method="post">
+                <div class="form-group">
+                    <label class="form-label">Email (ID)</label>
+                    <input type="email" th:field="*{id}" class="form-input" placeholder="user@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Họ và tên *</label>
+                    <input type="text" th:field="*{fullname}" class="form-input" placeholder="Nguyễn Văn A" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" th:field="*{birthday}" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Lương</label>
+                        <input type="number" step="0.01" th:field="*{salary}" class="form-input" placeholder="12345.67">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Giới tính</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" th:field="*{gender}" th:value="true" id="male">
+                            <label for="male">Nam</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" th:field="*{gender}" th:value="false" id="female">
+                            <label for="female">Nữ</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Cấp bậc</label>
+                    <select th:field="*{level}" class="form-select">
+                        <option th:each="lv : ${levels.entrySet()}" th:value="${lv.key}" th:text="${lv.value}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ảnh (tên file)</label>
+                    <input type="text" th:field="*{photo}" class="form-input" placeholder="oip.jpeg">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Lưu Staff</button>
+                    <button type="reset" class="btn btn-secondary">Đặt lại</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
