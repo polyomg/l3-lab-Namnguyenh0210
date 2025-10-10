@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trạng thái phần tử - Lab3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-nav {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .back-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .back-nav a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .table-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .table-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .table-header p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 16px 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+
+        th[rowspan] {
+            background: linear-gradient(135deg, #1e40af, #3730a3);
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        td {
+            padding: 16px 12px;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        tr {
+            transition: all 0.3s ease;
+        }
+
+        tr:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .name-cell {
+            font-weight: 600;
+            color: #1a202c;
+            text-align: left;
+            text-transform: capitalize;
+        }
+
+        .status-cell {
+            font-weight: 500;
+        }
+
+        .true-value {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .false-value {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .number-value {
+            font-weight: 600;
+            color: #7c3aed;
+        }
+
+        .odd-row {
+            background: linear-gradient(135deg, #fce7f3 0%, #f3e8ff 100%);
+        }
+
+        .even-row {
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+        }
+
+        .table-footer {
+            padding: 30px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .info-text {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin: 0 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e0;
+            color: #4a5568;
+        }
+
+        @media (max-width: 768px) {
+            .table-wrapper {
+                font-size: 0.8rem;
+            }
+
+            th,
+            td {
+                padding: 12px 8px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            tr:hover {
+                transform: none;
+            }
+
+            .table-header {
+                padding: 20px;
+            }
+
+            .table-footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="back-nav">
+            <a th:href="@{/}">
+                <i class="fas fa-arrow-left"></i>
+                Trang chủ
+            </a>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title">Trạng thái phần tử</h1>
+            <p class="page-subtitle">Hiển thị các thuộc tính trạng thái trong vòng lặp Thymeleaf</p>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-table"></i> Bảng trạng thái chi tiết</h2>
+                <p>Index, Count, First, Last, Odd, Even cho từng phần tử</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2">HỌ VÀ TÊN</th>
+                            <th colspan="6">CÁC THUỘC TÍNH TRẠNG THÁI</th>
+                        </tr>
+                        <tr>
+                            <th>Index</th>
+                            <th>Count</th>
+                            <th>First</th>
+                            <th>Last</th>
+                            <th>Odd</th>
+                            <th>Even</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th:block th:each="staff, st : ${list}">
+                            <tr th:class="${st.odd ? 'odd-row' : 'even-row'}">
+                                <td class="name-cell" th:text="${#strings.capitalizeWords(staff.fullname)}"></td>
+                                <td class="status-cell number-value" th:text="${st.index}"></td>
+                                <td class="status-cell number-value" th:text="${st.count}"></td>
+                                <td class="status-cell"
+                                    th:class="${st.first ? 'true-value' : 'false-value'}" th:text="${st.first}">
+                                </td>
+                                <td class="status-cell"
+                                    th:class="${st.last ? 'true-value' : 'false-value'}" th:text="${st.last}">
+                                </td>
+                                <td class="status-cell"
+                                    th:class="${st.odd ? 'true-value' : 'false-value'}" th:text="${st.odd}">
+                                </td>
+                                <td class="status-cell"
+                                    th:class="${st.even ? 'true-value' : 'false-value'}" th:text="${st.even}">
+                                </td>
+                            </tr>
+                        </th:block>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-footer">
+                <p class="info-text">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Lưu ý:</strong> Index bắt đầu từ 0, Count bắt đầu từ 1.
+                    Màu nền thay đổi dựa trên thuộc tính Odd/Even.
+                </p>
+                <div>
+                    <a th:href="@{/staff/list}" class="btn btn-primary">
+                        <i class="fas fa-list"></i>
+                        Danh sách Staff
+                    </a>
+                    <a th:href="@{/}" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Trang chủ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
